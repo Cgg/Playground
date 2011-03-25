@@ -21,7 +21,7 @@ function Resultat=RK4(F,P0,N,XFin)
 Pas = ( XFin - P0( 1, 2 ) ) / N;
 
 % Initialisation du vecteur-résultat.
-Resultat = zeros( n + 1, 2 );
+Resultat = zeros( N + 1, 2 );
 
 Resultat( 1, : ) = P0;
 
@@ -32,12 +32,12 @@ k = zeros( 1, 4 );
 X = zeros( 1, 2 );
 
 
-for i = 2..( N + 1 )
+for i = 2:1:( N + 1 )
 
     % Calcul de l'abscisse du point suivant
     Resultat( i , 1 ) = Resultat( 1, 1 ) + ( ( i - 1 ) * Pas );
 
-    X = Resultat( i - 1, : );
+    X = Resultat( i, : );
 
     % Calcul des coefficients k1, k2, k3, k4
     k( 1 ) = Pas * X * F;
@@ -50,4 +50,7 @@ for i = 2..( N + 1 )
     X( 1 ) = X( 1 ) + ( Pas / 2 );
     X( 2 ) = X( 2 ) + ( k( 2 ) / 2 );
         
+    % Calcul de l'abscisse finale
+    Resultat( i, 2 ) = Resultat( ( i -1 ), 2 ) + ( 1 / 6 ) * ( k( 1 ) + 2 *
+    k( 2 ) + 2 * k( 3 ) + k( 4 ) );
 end
