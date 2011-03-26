@@ -1,7 +1,7 @@
 % Implementation de la methode d'Euler, pour comparaison avec Runge-Kotta
 % d'ordre 4
 
-function Resultat=Euler(F,P0,N,XFin)
+function Resultat=Euler(P0,N,XFin)
 
 % Où :
 % - F est la fonction à intégrer (tq dy/dx = F(x,y) )
@@ -26,15 +26,17 @@ Resultat = zeros( N + 1, 2 );
 
 Resultat( 1, : ) = P0;
 
-% Initialisation de la matrice stockant le point courant
-X = zeros( 1, 2 );
+% Point courant
+Xi=zeros( 1, 1 );
+Yi=zeros( 1, 1 );
 
 for i = 2:1:( N + 1 )
 
     % Calcul de l'abscisse du point suivant
     Resultat( i , 1 ) = Resultat( 1, 1 ) + ( ( i - 1 ) * Pas );
 
-    X = Resultat( i, : );
+    Xi = Resultat( i, 1 );
+    Yi = Resultat( i, 2 );
 
-    Resultat( i, 2 ) = Resultat( ( i - 1 ), 2 ) + ( Pas * X * F );
+    Resultat( i, 2 ) = Resultat( ( i - 1 ), 2 ) + ( Pas * F( Xi, Yi ) );
 end

@@ -1,6 +1,6 @@
 % Implementation de la methode de Runge-Kutta, pour voir
 
-function Resultat=RK4(F,P0,N,XFin)
+function Resultat=RK4(P0,N,XFin)
 
 % Où :
 % - F est la fonction à intégrer (tq dy/dx = F(x,y) )
@@ -28,29 +28,29 @@ Resultat( 1, : ) = P0;
 % Initialisation de la matrice stockant les coef k1, k2, k3, k4
 k = zeros( 1, 4 );
 
-% Initialisation de la matrice stockant le point courant
-X = zeros( 1, 2 );
-
+% Le point courant
+Xi=zeros( 1, 1 );
+Yi=zeros( 1, 1 );
 
 for i = 2:1:( N + 1 )
 
     % Calcul de l'abscisse du point suivant
     Resultat( i , 1 ) = Resultat( 1, 1 ) + ( ( i - 1 ) * Pas );
 
-    X = Resultat( i, : );
+    Xi = Resultat( i, 1 );
+    Yi = Resultat( i, 2 );
 
     % Calcul des coefficients k1, k2, k3, k4
-    k( 1 ) = Pas * X * F;
-    
-    X( 1 ) = X( 1 ) + ( Pas / 2 );
-    X( 2 ) = X( 2 ) + ( k( 1 ) / 2 );
+    k( 1 ) = Pas * F( Xi, Yi );
 
-    k( 2 ) = Pas * X * F;
+    k( 2 ) = Pas * F( Xi + ( Pas / 2 ), Yi + ( k( 1 ) * ( Pas / 2 ) ) );
 
-    X( 1 ) = X( 1 ) + ( Pas / 2 );
-    X( 2 ) = X( 2 ) + ( k( 2 ) / 2 );
-        
+    k( 3 ) = Pas * F( Xi + ( Pas / 2 ), Yi + ( k( 2 ) * ( Pas / 2 ) ) );
+
+    k( 4 ) = Pas * F( Xi + Pas, Yi + ( k( 3 ) * Pas ) );
+
     % Calcul de l'abscisse finale
-    Resultat( i, 2 ) = Resultat( ( i -1 ), 2 ) + ( 1 / 6 ) * ( k( 1 ) + 2 *
+    Resultat( i, 2 ) = Resultat( ( i - 1 ), 2 ) + ( 1 / 6 ) * ( k( 1 ) + 2 *
     k( 2 ) + 2 * k( 3 ) + k( 4 ) );
+
 end
