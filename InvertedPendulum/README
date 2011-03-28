@@ -1,0 +1,9 @@
+### Inverted Pendulum
+
+#### RKIP
+
+Trying to modelize an inverted pendulum using Runge-Kutta 4 method, with
+Octave/Matlab.
+
+More information
+[here](http://membres.multimania.fr/lebrunpascal/memoire.html#II.1.LE%20PENDULE%20INVERSE). 
