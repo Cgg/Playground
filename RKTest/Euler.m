@@ -19,7 +19,7 @@ function Resultat=Euler(P0,N,XFin)
 %   ...
 % xn | yn
 
-Pas = ( XFin - P0( 1, 2 ) ) / N;
+Pas = ( XFin - P0( 1, 1 ) ) / N;
 
 % Initialisation du vecteur-résultat.
 Resultat = zeros( N + 1, 2 );
@@ -27,16 +27,16 @@ Resultat = zeros( N + 1, 2 );
 Resultat( 1, : ) = P0;
 
 % Point courant
-Xi=zeros( 1, 1 );
-Yi=zeros( 1, 1 );
+Xprev=zeros( 1, 1 );
+Yprev=zeros( 1, 1 );
 
 for i = 2:1:( N + 1 )
 
     % Calcul de l'abscisse du point suivant
     Resultat( i , 1 ) = Resultat( 1, 1 ) + ( ( i - 1 ) * Pas );
 
-    Xi = Resultat( i, 1 );
-    Yi = Resultat( i, 2 );
+    Xprev = Resultat( ( i - 1 ), 1 );
+    Yprev = Resultat( ( i - 1 ), 2 );
 
-    Resultat( i, 2 ) = Resultat( ( i - 1 ), 2 ) + ( Pas * F( Xi, Yi ) );
+    Resultat( i, 2 ) = Resultat( ( i - 1 ), 2 ) + ( Pas * F( Xprev, Yprev ) );
 end

@@ -2,6 +2,6 @@
 
 function R=F(X,Y)
 
-R = sin(X);
+R = - 2 * X * Y;
 
 end

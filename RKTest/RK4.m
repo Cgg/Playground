@@ -18,7 +18,7 @@ function Resultat=RK4(P0,N,XFin)
 %   ...
 % xn | yn
 
-Pas = ( XFin - P0( 1, 2 ) ) / N;
+Pas = ( XFin - P0( 1, 1 ) ) / N;
 
 % Initialisation du vecteur-résultat.
 Resultat = zeros( N + 1, 2 );
@@ -29,28 +29,27 @@ Resultat( 1, : ) = P0;
 k = zeros( 1, 4 );
 
 % Le point courant
-Xi=zeros( 1, 1 );
-Yi=zeros( 1, 1 );
+Xprev=zeros( 1, 1 );
+Yprev=zeros( 1, 1 );
 
 for i = 2:1:( N + 1 )
 
     % Calcul de l'abscisse du point suivant
     Resultat( i , 1 ) = Resultat( 1, 1 ) + ( ( i - 1 ) * Pas );
 
-    Xi = Resultat( i, 1 );
-    Yi = Resultat( i, 2 );
+    Xprev = Resultat( ( i - 1 ), 1 );
+    Yprev = Resultat( ( i - 1 ), 2 );
 
     % Calcul des coefficients k1, k2, k3, k4
-    k( 1 ) = Pas * F( Xi, Yi );
+    k( 1 ) = Pas * F( Xprev, Yprev );
 
-    k( 2 ) = Pas * F( Xi + ( Pas / 2 ), Yi + ( k( 1 ) * ( Pas / 2 ) ) );
+    k( 2 ) = Pas * F( Xprev + ( Pas / 2 ), Yprev + ( k( 1 ) * ( Pas / 2 ) ) );
 
-    k( 3 ) = Pas * F( Xi + ( Pas / 2 ), Yi + ( k( 2 ) * ( Pas / 2 ) ) );
+    k( 3 ) = Pas * F( Xprev + ( Pas / 2 ), Yprev + ( k( 2 ) * ( Pas / 2 ) ) );
 
-    k( 4 ) = Pas * F( Xi + Pas, Yi + ( k( 3 ) * Pas ) );
+    k( 4 ) = Pas * F( Xprev + Pas, Yprev + ( k( 3 ) * Pas ) );
 
     % Calcul de l'abscisse finale
-    Resultat( i, 2 ) = Resultat( ( i - 1 ), 2 ) + ( 1 / 6 ) * ( k( 1 ) + 2 *
-    k( 2 ) + 2 * k( 3 ) + k( 4 ) );
+    Resultat( i, 2 ) = Resultat( ( i - 1 ), 2 ) + ( 1 / 6 ) * ( k( 1 ) + 2 * k( 2 ) + 2 * k( 3 ) + k( 4 ) );
 
 end
