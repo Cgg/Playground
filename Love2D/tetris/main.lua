@@ -1,6 +1,3 @@
--- Eurostar fact : le "petit salé" porte bien son - il est petit et salé.
--- Bien que "petit salé cher" aurait été plus fidèle.
-
 --[[
 Un tetris simple.
 
