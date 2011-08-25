@@ -1,3 +1,5 @@
+-- TODO réagir aux inputs claviers (faire tourner/tomber la pièce)
+
 --[[
 Un tetris simple.
 
@@ -73,6 +75,9 @@ function love.load()
   -- playfield's top left corner position
   PF_X = 20
   PF_Y = 20
+
+  -- slipping margin
+  MAX_SLIP = 3
 
   -- game variables
   nextPiece    = createPiece( PFW + 2, 0 )
@@ -151,21 +156,26 @@ function drawHeap()
 end
 
 function currentPieceGoDown()
-  --[[
-  do minus 1 on current piece's Y
+  -- do plus 1 on current piece's Y
+  currentPiece.Y = currentPiece.Y + 1
 
-  check if it intersects with the heap
+  -- check if it intersects with the heap
+  if IntersectHeapAndPiece( currentPiece ) then
+    --restore current piece's Y
+    currentPiece.Y = currentPiece.Y + 1
 
-  if so 
-    restore current piece's Y
-    if g_slip < 3 
-      g_slip += 1
+    -- can the piece still slip ?
+    if g_slip < MAX_SLIP then
+      g_slip = g_slip + 1
     else
-      la piece est maintenant bien tombée/collée
-      updateHeap
-  if not
-    g_slip = 0
-  --]]
+      -- now the piece is stuck for good
+      g_slip = 0
+
+      UpdateHeap()
+    end
+  -- no ELSE statement. If the current piece doesn't intersect with the
+  -- heap we leave it there.
+  end
 end
 
 function IntersectHeapAndPiece( P )
@@ -179,6 +189,9 @@ function IntersectHeapAndPiece( P )
   --]]
 
   return false;
+end
+
+function UpdateHeap()
 end
 
 function love.update( dt )
