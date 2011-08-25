@@ -8,7 +8,13 @@ L'aire de jeux fait 10 carrés de côté (=100 px) et 20 de haut (=200 px)
 --]]
 
 function createPiece( X_i, Y_i )
-  -- create a RANDOM piece on the top of the play field.
+  --[[
+  create a RANDOM piece with center being at X_i, Y_i (grid coordinates)
+  organisation d'une table de données "pièce" :
+   - trois champs r, g, b pour la couleur de la pièce
+   - les "grid coordinates d'un carré de la pièce
+   - un tableau 3x2 stockant les grid coordinates des trois autres carrés
+  --]]
   
   local P = {}
 
@@ -25,7 +31,9 @@ function createPiece( X_i, Y_i )
     P.S[i] = {}
   end
 
-  -- let's begin with the T piece
+  -- TODO generate a random piece
+
+  -- this is for the T piece
   P.r = 255
 
   P.S[0].X = -1
@@ -36,6 +44,14 @@ function createPiece( X_i, Y_i )
 
   P.S[2].X = 0
   P.S[2].Y = 1
+
+  -- this is for S
+  -- this is for SInv
+  -- this is for L
+  -- this is for LInv
+  -- this is for I
+  -- this is for O (the square)
+  -- this is for the one I forgot
 
   return P
 end
@@ -75,7 +91,7 @@ function love.load()
   g_n_lines = 0
   g_score   = 0
   
-  g_Vinv = 1 -- inverse of fall speed (seconds per block )
+  g_Vinv = 1   -- inverse of fall speed (seconds per block )
   g_dt_acc = 0 -- to know when to make the current piece go down
   g_slip   = 0 -- pour laisser la piece "glisser" lorsqu'elle ne peut pas
                -- descendre
@@ -101,8 +117,8 @@ end
 
 function drawElementarySquare( X, Y, r, g, b )
   -- draw an elementary square (squares composing the pieces) at a given
-  -- position. The position is given in "elementary square" coordinates!
-  -- CONTRACT : X and Y are integers.
+  -- position. The position is given in grid coordinates!
+  -- hence the CONTRACT : X and Y are integers.
 
   love.graphics.setColor( r, g, b )
 
@@ -152,10 +168,15 @@ function currentPieceGoDown()
   --]]
 end
 
-function IntersectHeapAndCP()
+function IntersectHeapAndPiece( P )
   -- check if current piece and heap are overlapping
-  local X_a = currentPiece.X
-  local Y_a = currentPiece.Y
+  local X_a = P.X
+  local Y_a = P.Y
+
+  --[[ pour chaque carré C de P faire
+        si C.Y == PF_H - 1 retourner vrai
+        si heap[C.X][C.Y] ~= -1 retourner vrai
+  --]]
 
   return false;
 end
