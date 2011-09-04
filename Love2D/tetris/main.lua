@@ -18,6 +18,8 @@ function createPiece( X_i, Y_i )
    - un tableau 3x2 stockant les grid coordinates des trois autres carrés
   --]]
   
+  local piece_type = math.random( 0, 6 )
+
   local P = {}
 
   P.r = 0
@@ -35,24 +37,110 @@ function createPiece( X_i, Y_i )
 
   -- TODO generate a random piece
 
-  -- this is for the T piece
-  P.r = 255
+  if piece_type == 0 then
+    -- this is for the T piece
+    P.r = 255
 
-  P.S[0].X = -1
-  P.S[0].Y = 0
+    P.S[0].X = -1
+    P.S[0].Y = 0
 
-  P.S[1].X = 1
-  P.S[1].Y = 0
+    P.S[1].X = 1
+    P.S[1].Y = 0
 
-  P.S[2].X = 0
-  P.S[2].Y = 1
+    P.S[2].X = 0
+    P.S[2].Y = 1
 
+  elseif piece_type == 1 then
   -- this is for S
+    P.r = 255
+    P.g = 0
+    P.b = 208
+
+    P.S[0].X = 0
+    P.S[0].Y = -1
+
+    P.S[1].X = 1
+    P.S[1].Y = 0
+
+    P.S[2].X = 1
+    P.S[2].Y = 1
+
+  elseif piece_type == 2 then
   -- this is for SInv
+    P.r = 21
+    P.g = 0
+    P.b = 255
+
+    P.S[0].X = 0
+    P.S[0].Y = -1
+
+    P.S[1].X = -1
+    P.S[1].Y = 0
+
+    P.S[2].X = -1
+    P.S[2].Y = 1
+
+  elseif piece_type == 3 then
   -- this is for L
+    P.r = 0
+    P.g = 255
+    P.b = 251
+
+    P.S[0].X = 1
+    P.S[0].Y = 0
+
+    P.S[1].X = 2
+    P.S[1].Y = 0
+
+    P.S[2].X = 0
+    P.S[2].Y = 1
+
+  elseif piece_type == 4 then
   -- this is for LInv
-  -- this is for I
-  -- this is for O (the square)
+    P.r = 0
+    P.g = 255
+    P.b = 0
+
+    P.S[0].X = -1
+    P.S[0].Y = 0
+
+    P.S[1].X = -2
+    P.S[1].Y = 0
+
+    P.S[2].X = 0
+    P.S[2].Y = 1
+
+  elseif piece_type == 5 then
+    -- this is for I
+    P.r = 200
+    P.g = 0
+    P.b = 255
+
+    P.S[0].X = -1
+    P.S[0].Y = 0
+
+    P.S[1].X = 1
+    P.S[1].Y = 0
+
+    P.S[2].X = 2
+    P.S[2].Y = 0
+
+  elseif piece_type == 6 then
+    -- this is for O (the square)
+    P.r = 255
+    P.g = 0
+    P.b = 125
+
+    P.S[0].X = 1
+    P.S[0].Y = 0
+
+    P.S[1].X = 0
+    P.S[1].Y = 1
+
+    P.S[2].X = 1
+    P.S[2].Y = 1
+  end
+
   -- this is for the one I forgot
 
   return P
