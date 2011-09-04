@@ -208,6 +208,17 @@ function drawFrame()
                            ( PFH * SQW ) + 2 )
 end
 
+
+function drawInfo()
+  -- draw informations : score, number of lines and level
+  love.graphics.setColor( 255, 255, 255 )
+
+  love.graphics.print( "Score : " .. g_score, 5 + PF_X + ( PFW * SQW ), PF_Y + (( PFH - 3 ) * SQW) )
+  love.graphics.print( "Lines : " .. g_n_lines, 5 + PF_X + ( PFW * SQW ), PF_Y + (( PFH - 2 ) * SQW) )
+  love.graphics.print( "Level : " .. g_level, 5 + PF_X + ( PFW * SQW ), PF_Y + (( PFH - 1 ) * SQW) )
+end
+
+
 function drawElementarySquare( X, Y, r, g, b )
   -- draw an elementary square (squares composing the pieces) at a given
   -- position. The position is given in grid coordinates!
