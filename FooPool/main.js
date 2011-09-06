@@ -1,8 +1,8 @@
 /* FooPool
  *
  * A kind of pool simulation in JavaScript. Quite basic for now:
- * - the field is the canvas
- * - the user can give direct impulse to the ball only
+ * - the field is the canvas (same coordinate system)
+ * - the user can give direct impulse to the ball only (no "effects")
  * - basic bouncing behaviour against the edges
  * - only one ball
  * - no fancy visual effects
@@ -13,7 +13,8 @@
  * - variables declarations are sorted between the different objects (ball,
  * field, ...) and the variable name is prefixed accordingly
  * - local variables may not use prefixes
- * - after the prefix I use camel case
+ * - after the prefix I use camel case for the variables and underscore
+ * separated uppercase for the constants
  * - if a variable is a constant its name is in uppercase (not the prefix)
  */
 
@@ -188,4 +189,6 @@ update = function( dt )
 
   b_x = b_x + ( b_sx * dt );
   b_y = b_y + ( b_sy * dt );
+
+  // now seems like a good time to detect and handle collisions
 }
