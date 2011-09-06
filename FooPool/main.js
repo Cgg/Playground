@@ -42,9 +42,11 @@ init = function()
   b_ax    = 0;       // acceleration
   b_ay    = 0;
   b_click = false;
+  b_force = { X : 0, Y : 0 }; // vertice of force applied to the ball
 
   h_canvas.addEventListener( "mousedown", onMouseDown, false );
   h_canvas.addEventListener( "mouseup", onMouseUp, false );
+  h_canvas.addEventListener( "mousemove", onMouseMove, false );
 
   setInterval( "draw()", g_dtDraw );
   setInterval( "update( g_dtUpdate )", g_dtUpdate );
@@ -62,6 +64,9 @@ onMouseDown = function( evt )
   if( Math.sqrt( Math.pow( b_x - cursorPostion.X, 2 ) + Math.pow( b_y - cursorPostion.Y, 2 ) ) <= b_R )
   {
     b_click = true;
+
+    b_force.X = 0;
+    b_force.Y = 0;
   }
 }
 
@@ -71,6 +76,17 @@ onMouseUp = function( evt )
 
   // then compute the norm of segment from mousedown point to here and
   // apply corresponding force to the ball
+}
+
+onMouseMove = function( evt )
+{
+  if( b_click )
+  {
+    var cursorPostion = getCursorPos( evt );
+
+    b_force.X = cursorPostion.X - b_x;
+    b_force.Y = cursorPostion.Y - b_y;
+  }
 }
 
 
@@ -131,6 +147,13 @@ draw = function()
 
   ctx.beginPath();
   ctx.arc( b_x, b_y, b_R, 0, Math.PI*2 );
+
+  if( b_click )
+  {
+    ctx.moveTo( b_x, b_y );
+    ctx.lineTo( b_x + b_force.X, b_y + b_force.Y );
+  }
+
   ctx.closePath();
 
   ctx.fill();
