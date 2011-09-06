@@ -47,8 +47,9 @@ init = function()
 /* Responsible for drawing everything on the screen */
 draw = function()
 {
-  // TODO save context and restore it
   var ctx = h_canvas.getContext( "2d" );
+
+  ctx.save();
 
   ctx.clearRect( 0, 0, f_W, f_H );
 
@@ -67,6 +68,8 @@ draw = function()
 
   ctx.fill();
   ctx.stroke();
+
+  ctx.restore();
 }
 
 
