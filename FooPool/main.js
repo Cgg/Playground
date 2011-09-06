@@ -23,18 +23,21 @@ init = function()
   h_canvas = document.getElementById( "mainCanvas" )
 
   /* game variables */
+  g_F_SCALE  = 8;    // scaling factor applied to the graphic vector to get
+                     // force applied to the ball
   g_dtDraw   = 33;
   g_dtUpdate = 33;
 
   /* Field */
   f_W = h_canvas.width
   f_H = h_canvas.height
-  f_F = 10;             // friction factor of the field
+  f_F = 0.2;             // friction factor of the field
 
   /* Balls of steel */
   b_C_FR  = "rgb( 255, 94, 94 )";   // ball's color if not clicked
   b_C_CLK = "rgb( 121, 125, 242 )"; // ball's color if clicked
   b_R     = 10;      // ball's radius
+  b_WGT   = 0.21;     // ball's weight (in kg)
   b_x     = f_W / 2; // position
   b_y     = f_H / 2;
   b_sx    = 0;       // speed
@@ -49,7 +52,7 @@ init = function()
   h_canvas.addEventListener( "mousemove", onMouseMove, false );
 
   setInterval( "draw()", g_dtDraw );
-  setInterval( "update( g_dtUpdate )", g_dtUpdate );
+  setInterval( "update( g_dtUpdate / 1000 )", g_dtUpdate );
 }
 
 
@@ -76,6 +79,15 @@ onMouseUp = function( evt )
 
   // then compute the norm of segment from mousedown point to here and
   // apply corresponding force to the ball
+
+  var force = { X : b_force.X * g_F_SCALE, Y : b_force.Y * g_F_SCALE };
+
+  b_ax = force.X / b_WGT;
+  b_ay = force.Y / b_WGT;
+
+  // bof
+  b_sx = b_ax * g_dtUpdate / 1000;
+  b_sy = b_ay * g_dtUpdate / 1000;
 }
 
 onMouseMove = function( evt )
@@ -166,4 +178,14 @@ draw = function()
 /* Update objects' properties with a dt timestep */
 update = function( dt )
 {
+  var friction = { X : -b_sx * f_F, Y : -b_sy * f_F };
+
+  b_ax = friction.X / b_WGT;
+  b_ay = friction.Y / b_WGT;
+
+  b_sx = b_sx + ( b_ax * dt );
+  b_sy = b_sy + ( b_ay * dt );
+
+  b_x = b_x + ( b_sx * dt );
+  b_y = b_y + ( b_sy * dt );
 }
