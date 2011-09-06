@@ -29,18 +29,77 @@ init = function()
   /* Field */
   f_W = h_canvas.width
   f_H = h_canvas.height
+  f_F = 10;             // friction factor of the field
 
   /* Balls of steel */
-  b_x  = f_W / 2; // position
-  b_y  = f_H / 2;
-  b_sx = 0;       // speed
-  b_sy = 0;
-  b_ax = 0;       // acceleration
-  b_ay = 0;
-  b_R  = 10;      // ball's radius
+  b_C_FR  = "rgb( 255, 94, 94 )";   // ball's color if not clicked
+  b_C_CLK = "rgb( 121, 125, 242 )"; // ball's color if clicked
+  b_R     = 10;      // ball's radius
+  b_x     = f_W / 2; // position
+  b_y     = f_H / 2;
+  b_sx    = 0;       // speed
+  b_sy    = 0;
+  b_ax    = 0;       // acceleration
+  b_ay    = 0;
+  b_click = false;
+
+  h_canvas.addEventListener( "mousedown", onMouseDown, false );
+  h_canvas.addEventListener( "mouseup", onMouseUp, false );
 
   setInterval( "draw()", g_dtDraw );
   setInterval( "update( g_dtUpdate )", g_dtUpdate );
+}
+
+
+/* mouse events handlers */
+onMouseDown = function( evt )
+{
+  var cursorPostion = getCursorPos( evt );
+
+  // check if we are on the ball
+  var i = Math.sqrt( Math.pow( b_x - cursorPostion.X, 2 ) + Math.pow( b_y - cursorPostion, 2 ) )
+
+  if( Math.sqrt( Math.pow( b_x - cursorPostion.X, 2 ) + Math.pow( b_y - cursorPostion.Y, 2 ) ) <= b_R )
+  {
+    b_click = true;
+  }
+}
+
+onMouseUp = function( evt )
+{
+  b_click = false;
+
+  // then compute the norm of segment from mousedown point to here and
+  // apply corresponding force to the ball
+}
+
+
+/* Compute cursor postion from a mouse event */
+getCursorPos = function( mouseEvt )
+{
+  var x;
+  var y;
+
+  if( mouseEvt.pageX != undefined && mouseEvt.pageY != undefined )
+  {
+    x = mouseEvt.pageX;
+    y = mouseEvt.pageY;
+  }
+  else
+  {
+    x = mouseEvt.clientX + document.body.scrollLeft +
+    document.documentElement.scrollLeft;
+
+    y = mouseEvt.clientY +
+    document.body.scrollTop + document.documentElement.scrollTop;
+  }
+
+  x -= h_canvas.offsetLeft;
+  y -= h_canvas.offsetTop;
+
+  var pos = { X : x, Y : y };
+
+  return pos;
 }
 
 
@@ -60,10 +119,18 @@ draw = function()
   // draw the ball
   ctx.strokeStyle = "#000"
   ctx.lineWidth   = 2;
-  ctx.fillStyle   = "rgb( 255, 94, 94 )"
+
+  if( b_click )
+  {
+    ctx.fillStyle = b_C_CLK;
+  }
+  else
+  {
+    ctx.fillStyle = b_C_FR;
+  }
 
   ctx.beginPath();
-  ctx.arc( b_x - b_R, b_y, b_R, 0, Math.PI*2 );
+  ctx.arc( b_x, b_y, b_R, 0, Math.PI*2 );
   ctx.closePath();
 
   ctx.fill();
