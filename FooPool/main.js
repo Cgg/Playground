@@ -1,8 +1,10 @@
+// TODO deactivate mouse interactions when the ball is moving
+
 /* FooPool
  *
  * A kind of pool simulation in JavaScript. Quite basic for now:
  * - the field is the canvas (same coordinate system)
- * - the user can give direct impulse to the ball only (no "effects")
+ * - the user can give direct impulse to the ball only (no spin)
  * - basic bouncing behaviour against the edges
  * - only one ball
  * - no fancy visual effects
@@ -49,7 +51,7 @@ init = function()
   b_force = { X : 0, Y : 0 }; // vertice of force applied to the ball
 
   h_canvas.addEventListener( "mousedown", onMouseDown, false );
-  h_canvas.addEventListener( "mouseup", onMouseUp, false );
+  h_canvas.addEventListener( "mouseup"  , onMouseUp  , false );
   h_canvas.addEventListener( "mousemove", onMouseMove, false );
 
   setInterval( "draw()", g_dtDraw );
@@ -146,7 +148,7 @@ draw = function()
   ctx.strokeRect( 0, 0, f_W, f_H )
 
   // draw the ball
-  ctx.strokeStyle = "#000"
+  ctx.strokeStyle = "#000";
   ctx.lineWidth   = 2;
 
   if( b_click )
