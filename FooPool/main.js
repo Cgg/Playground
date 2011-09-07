@@ -39,15 +39,19 @@ init = function()
   /* Balls of steel */
   b_C_FR  = "rgb( 255, 94, 94 )";   // ball's color if not clicked
   b_C_CLK = "rgb( 121, 125, 242 )"; // ball's color if clicked
+  b_C_HVR = "rgb( 150, 255, 150 )"; // ball's hover zone color
   b_R     = 10;      // ball's radius
-  b_WGT   = 0.21;     // ball's weight (in kg)
+  b_R_SP  = 40;      // radius for the "spin zone"
+  b_WGT   = 0.21;    // ball's weight (in kg)
   b_x     = f_W / 2; // position
   b_y     = f_H / 2;
   b_sx    = 0;       // speed
   b_sy    = 0;
   b_ax    = 0;       // acceleration
   b_ay    = 0;
-  b_click = false;
+  b_click = false;   // b_click : the user clicked on the ball
+  b_hover = false;   // b_hover : the mouse is hover the ball
+  b_pClic = { X : 0, Y : 0 }; // point from where the user start to click
   b_force = { X : 0, Y : 0 }; // vertice of force applied to the ball
 
   h_canvas.addEventListener( "mousedown", onMouseDown, false );
@@ -64,12 +68,25 @@ onMouseDown = function( evt )
 {
   var cursorPostion = getCursorPos( evt );
 
-  // check if we are on the ball
-  var i = Math.sqrt( Math.pow( b_x - cursorPostion.X, 2 ) + Math.pow( b_y - cursorPostion, 2 ) )
-
-  if( Math.sqrt( Math.pow( b_x - cursorPostion.X, 2 ) + Math.pow( b_y - cursorPostion.Y, 2 ) ) <= b_R )
+  // check if we are in the clickable zone
+  if( Math.sqrt( Math.pow( b_x - cursorPostion.X, 2 ) +
+                 Math.pow( b_y - cursorPostion.Y, 2 )   ) <= b_R_SP )
   {
     b_click = true;
+
+    // if we are somewhere in the ball we stick the start point to the
+    // middle of the ball
+    if( Math.sqrt( Math.pow( b_x - cursorPostion.X, 2 ) +
+                   Math.pow( b_y - cursorPostion.Y, 2 )   ) <= b_R )
+    {
+      b_pClic.X = b_x;
+      b_pClic.Y = b_y;
+    }
+    else
+    {
+      b_pClic.X = cursorPostion.X;
+      b_pClic.Y = cursorPostion.Y;
+    }
 
     b_force.X = 0;
     b_force.Y = 0;
@@ -79,6 +96,7 @@ onMouseDown = function( evt )
 onMouseUp = function( evt )
 {
   b_click = false;
+  b_hover = false;
 
   // then compute the norm of segment from mousedown point to here and
   // apply corresponding force to the ball
@@ -91,16 +109,28 @@ onMouseUp = function( evt )
   // bof
   b_sx = b_ax * g_dtUpdate / 1000;
   b_sy = b_ay * g_dtUpdate / 1000;
+
+  // don't forget to set force back to zero otherwise every next click
+  // anywher will move the ball
+  b_force.X = 0;
+  b_force.Y = 0;
+  // OR I could check for b_click to be true.
 }
 
 onMouseMove = function( evt )
 {
+  var cursorPostion = getCursorPos( evt );
+
   if( b_click )
   {
-    var cursorPostion = getCursorPos( evt );
 
-    b_force.X = cursorPostion.X - b_x;
-    b_force.Y = cursorPostion.Y - b_y;
+    b_force.X = cursorPostion.X - b_pClic.X;
+    b_force.Y = cursorPostion.Y - b_pClic.Y;
+  }
+  else
+  {
+    b_hover = ( Math.sqrt( Math.pow( b_x - cursorPostion.X, 2 ) +
+                           Math.pow( b_y - cursorPostion.Y, 2 )   ) <= b_R_SP );
   }
 }
 
@@ -151,6 +181,17 @@ draw = function()
   ctx.strokeStyle = "#000";
   ctx.lineWidth   = 2;
 
+  if( b_hover || b_click )
+  {
+    ctx.fillStyle = b_C_HVR;
+
+    ctx.beginPath();
+    ctx.arc( b_x, b_y, b_R_SP, 0, Math.PI*2 );
+    ctx.closePath();
+
+    ctx.fill();
+  }
+
   if( b_click )
   {
     ctx.fillStyle = b_C_CLK;
@@ -165,8 +206,8 @@ draw = function()
 
   if( b_click )
   {
-    ctx.moveTo( b_x, b_y );
-    ctx.lineTo( b_x + b_force.X, b_y + b_force.Y );
+    ctx.moveTo( b_pClic.X, b_pClic.Y );
+    ctx.lineTo( b_pClic.X + b_force.X, b_pClic.Y + b_force.Y );
   }
 
   ctx.closePath();
