@@ -123,7 +123,6 @@ onMouseMove = function( evt )
 
   if( b_click )
   {
-
     b_force.X = cursorPostion.X - b_pClic.X;
     b_force.Y = cursorPostion.Y - b_pClic.Y;
   }
