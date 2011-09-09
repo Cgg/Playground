@@ -98,9 +98,6 @@ onMouseUp = function( evt )
   b_click = false;
   b_hover = false;
 
-  // then compute the norm of segment from mousedown point to here and
-  // apply corresponding force to the ball
-
   var force = { X : b_force.X * g_F_SCALE, Y : b_force.Y * g_F_SCALE };
 
   b_ax = force.X / b_WGT;
