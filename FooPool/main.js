@@ -69,8 +69,7 @@ onMouseDown = function( evt )
   var cursorPostion = getCursorPos( evt );
 
   // check if we are in the clickable zone
-  if( Math.sqrt( Math.pow( b_x - cursorPostion.X, 2 ) +
-                 Math.pow( b_y - cursorPostion.Y, 2 )   ) <= b_R_SP )
+  if( b_hover )
   {
     b_click = true;
 
@@ -79,6 +78,8 @@ onMouseDown = function( evt )
     if( Math.sqrt( Math.pow( b_x - cursorPostion.X, 2 ) +
                    Math.pow( b_y - cursorPostion.Y, 2 )   ) <= b_R )
     {
+      b_hover = false;
+
       b_pClic.X = b_x;
       b_pClic.Y = b_y;
     }
@@ -177,12 +178,19 @@ draw = function()
   ctx.strokeStyle = "#000";
   ctx.lineWidth   = 2;
 
-  if( b_hover || b_click )
+  if( b_hover )
   {
     ctx.fillStyle = b_C_HVR;
 
     ctx.beginPath();
+
     ctx.arc( b_x, b_y, b_R_SP, 0, Math.PI*2 );
+
+    if( b_click )
+    {
+      // draw axis in the hover zone
+    }
+
     ctx.closePath();
 
     ctx.fill();
