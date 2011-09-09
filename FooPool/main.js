@@ -186,14 +186,46 @@ draw = function()
 
     ctx.arc( b_x, b_y, b_R_SP, 0, Math.PI*2 );
 
-    if( b_click )
-    {
-      // draw axis in the hover zone
-    }
+    ctx.fill();
 
     ctx.closePath();
 
-    ctx.fill();
+    if( b_click )
+    {
+
+      // draw axis in the hover zone
+      angle = - Math.atan( b_force.X / b_force.Y );
+
+      angle = ( b_force.Y < 0 ? angle : angle + Math.PI );
+
+      ctx.save();
+
+      ctx.translate( b_x, b_y );
+      ctx.rotate( angle );
+
+      ctx.strokeStyle = "rgba( 0, 0, 0, 200 )";
+      ctx.lineWidth   = 1;
+
+      ctx.beginPath();
+
+      ctx.moveTo( 0, b_R_SP );
+      ctx.lineTo( 0, -b_R_SP );
+      ctx.lineTo( -5, -b_R_SP + 5 );
+      ctx.moveTo( 0, -b_R_SP );
+      ctx.lineTo( 5, -b_R_SP + 5 );
+
+      ctx.moveTo( -b_R_SP, 0 );
+      ctx.lineTo( b_R_SP, 0 );
+      ctx.lineTo( b_R_SP - 5, - 5 );
+      ctx.moveTo( b_R_SP, 0 );
+      ctx.lineTo( b_R_SP - 5, 5 );
+
+      ctx.stroke();
+
+      ctx.closePath();
+
+      ctx.restore();
+    }
   }
 
   if( b_click )
