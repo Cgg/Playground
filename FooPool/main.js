@@ -28,6 +28,9 @@ init = function()
   /* game variables */
   g_F_SCALE  = 8;    // scaling factor applied to the graphic vector to get
                      // force applied to the ball
+  g_M_T_OUT  = 750;  // Time out : if the user doesn't move the mouse within 
+                     // that time the move is reset
+  g_m_timer  = 0;
   g_dtDraw   = 33;
   g_dtUpdate = 33;
 
@@ -92,27 +95,28 @@ onMouseDown = function( evt )
     b_force.X = 0;
     b_force.Y = 0;
   }
+
+  g_m_timer = setTimeout( "mouseMoveTimeout()", g_M_T_OUT );
 }
 
 onMouseUp = function( evt )
 {
-  b_click = false;
-  b_hover = false;
+  // we have to check for b_click since the user could have cancelled his
+  // move by waiting for g_M_T_OUT to expire.
+  if( b_click )
+  {
+    b_click = false;
+    b_hover = false;
 
-  var force = { X : b_force.X * g_F_SCALE, Y : b_force.Y * g_F_SCALE };
+    var force = { X : b_force.X * g_F_SCALE, Y : b_force.Y * g_F_SCALE };
 
-  b_ax = force.X / b_WGT;
-  b_ay = force.Y / b_WGT;
+    b_ax = force.X / b_WGT;
+    b_ay = force.Y / b_WGT;
 
-  // bof
-  b_sx = b_ax * g_dtUpdate / 1000;
-  b_sy = b_ay * g_dtUpdate / 1000;
-
-  // don't forget to set force back to zero otherwise every next click
-  // anywher will move the ball
-  b_force.X = 0;
-  b_force.Y = 0;
-  // OR I could check for b_click to be true.
+    // bof
+    b_sx = b_ax * g_dtUpdate / 1000;
+    b_sy = b_ay * g_dtUpdate / 1000;
+  }
 }
 
 onMouseMove = function( evt )
@@ -121,8 +125,12 @@ onMouseMove = function( evt )
 
   if( b_click )
   {
+    clearTimeout( g_m_timer );
+
     b_force.X = cursorPostion.X - b_pClic.X;
     b_force.Y = cursorPostion.Y - b_pClic.Y;
+
+    g_m_timer = setTimeout( "mouseMoveTimeout()", g_M_T_OUT );
   }
   else
   {
@@ -131,6 +139,10 @@ onMouseMove = function( evt )
   }
 }
 
+mouseMoveTimeout = function()
+{
+  b_click = false;
+}
 
 /* Compute cursor postion from a mouse event */
 getCursorPos = function( mouseEvt )
