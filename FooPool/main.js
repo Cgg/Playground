@@ -30,6 +30,9 @@ init = function()
                      // force applied to the ball
   g_M_T_OUT  = 750;  // Time out : if the user doesn't move the mouse within 
                      // that time the move is reset
+
+  g_EPS      = 1.5; // something almost zero
+
   g_m_timer  = 0;
   g_dtDraw   = 33;
   g_dtUpdate = 33;
@@ -116,6 +119,10 @@ onMouseUp = function( evt )
     // bof
     b_sx = b_ax * g_dtUpdate / 1000;
     b_sy = b_ay * g_dtUpdate / 1000;
+
+    h_canvas.removeEventListener( "mousedown", onMouseDown );
+    h_canvas.removeEventListener( "mouseup"  , onMouseUp   );
+    h_canvas.removeEventListener( "mousemove", onMouseMove );
   }
 }
 
@@ -281,5 +288,15 @@ update = function( dt )
   b_x = b_x + ( b_sx * dt );
   b_y = b_y + ( b_sy * dt );
 
+  // if ball stopped then the user can click again.
+  if( Math.abs( b_sx ) < g_EPS && Math.abs( b_sy ) < g_EPS &&
+      Math.abs( b_ax ) < g_EPS && Math.abs( b_ay ) < g_EPS )
+  {
+    b_sx = b_sy = b_ax = b_ay = 0.0;
+
+    h_canvas.addEventListener( "mousedown", onMouseDown, false );
+    h_canvas.addEventListener( "mouseup"  , onMouseUp  , false );
+    h_canvas.addEventListener( "mousemove", onMouseMove, false );
+  }
   // now seems like a good time to detect and handle collisions
 }
